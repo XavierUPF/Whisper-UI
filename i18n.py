@@ -13,6 +13,8 @@ TRANSLATIONS = {
         "download_vtt": "Descargar VTT",
         "beam_size": "Tamaño del Haz (Beam Size)",
         "compute_type": "Tipo de Cómputo",
+        "device": "Dispositivo (CPU/GPU)",
+        "enable_diarization": "Habilitar Diarización de Oradores",
         "status": "Estado:",
         "processing": "Procesando...",
         "done": "¡Completado!"
@@ -31,6 +33,8 @@ TRANSLATIONS = {
         "download_vtt": "Descarregar VTT",
         "beam_size": "Mida del Feix (Beam Size)",
         "compute_type": "Tipus de Còmput",
+        "device": "Dispositiu (CPU/GPU)",
+        "enable_diarization": "Habilitar Diarització de Locutors",
         "status": "Estat:",
         "processing": "Processant...",
         "done": "Completat!"
@@ -49,6 +53,8 @@ TRANSLATIONS = {
         "download_vtt": "Download VTT",
         "beam_size": "Beam Size",
         "compute_type": "Compute Type",
+        "device": "Device (CPU/GPU)",
+        "enable_diarization": "Enable Speaker Diarization",
         "status": "Status:",
         "processing": "Processing...",
         "done": "Done!"
