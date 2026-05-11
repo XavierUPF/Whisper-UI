@@ -49,7 +49,7 @@ def generate_export_files(results):
             
     return txt_path, srt_path, vtt_path
 
-def process_audio(audio_path, model_size, num_speakers, beam_size, compute_type, lang_code):
+def process_audio(audio_path, model_size, num_speakers, beam_size, compute_type, device_option, enable_diarization, lang_code):
     if not audio_path:
         return "No audio file provided.", None, None, None
         
@@ -59,7 +59,9 @@ def process_audio(audio_path, model_size, num_speakers, beam_size, compute_type,
             model_size=model_size,
             num_speakers=int(num_speakers),
             beam_size=int(beam_size),
-            compute_type=compute_type
+            compute_type=compute_type,
+            device_option=device_option,
+            enable_diarization=enable_diarization
         )
         
         if not results:
@@ -88,6 +90,8 @@ def update_ui(lang_code):
         gr.update(label=get_text(lang_code, "num_speakers")),
         gr.update(label=get_text(lang_code, "beam_size")),
         gr.update(label=get_text(lang_code, "compute_type")),
+        gr.update(label=get_text(lang_code, "device")),
+        gr.update(label=get_text(lang_code, "enable_diarization")),
         gr.update(label=get_text(lang_code, "language_ui")),
         gr.update(value=get_text(lang_code, "transcribe_btn")),
         gr.update(label=get_text(lang_code, "transcription_output")),
@@ -125,12 +129,22 @@ with gr.Blocks(title="Whisper Diarization") as app:
                 precision=0
             )
             
+            enable_diarization = gr.Checkbox(
+                value=True,
+                label=get_text('es', 'enable_diarization')
+            )
+
             with gr.Accordion("Advanced Settings", open=False):
                 beam_size = gr.Slider(minimum=1, maximum=10, step=1, value=5, label=get_text('es', 'beam_size'))
                 compute_type = gr.Dropdown(
                     choices=["default", "float16", "int8_float16", "int8"],
                     value="default",
                     label=get_text('es', 'compute_type')
+                )
+                device_option = gr.Dropdown(
+                    choices=["auto", "cpu", "cuda"],
+                    value="auto",
+                    label=get_text('es', 'device')
                 )
                 
             transcribe_btn = gr.Button(get_text('es', 'transcribe_btn'), variant="primary")
@@ -148,7 +162,8 @@ with gr.Blocks(title="Whisper Diarization") as app:
         inputs=[lang_selector],
         outputs=[
             title, description, audio_in, model_size, num_speakers, 
-            beam_size, compute_type, lang_selector, transcribe_btn, 
+            beam_size, compute_type, device_option, enable_diarization,
+            lang_selector, transcribe_btn,
             output_text, out_txt, out_srt, out_vtt
         ]
     )
@@ -156,7 +171,7 @@ with gr.Blocks(title="Whisper Diarization") as app:
     # Handle transcription
     transcribe_btn.click(
         fn=process_audio,
-        inputs=[audio_in, model_size, num_speakers, beam_size, compute_type, lang_selector],
+        inputs=[audio_in, model_size, num_speakers, beam_size, compute_type, device_option, enable_diarization, lang_selector],
         outputs=[output_text, out_txt, out_srt, out_vtt]
     )
 

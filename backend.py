@@ -8,9 +8,13 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics import silhouette_score
 import librosa
 
-def transcribe_and_diarize(audio_path, model_size, num_speakers, beam_size, compute_type):
+def transcribe_and_diarize(audio_path, model_size, num_speakers, beam_size, compute_type, device_option="auto", enable_diarization=True):
     # 1. Setup device for both Whisper and SpeechBrain
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    if device_option == "auto":
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+    else:
+        device = device_option
+
     compute_type_actual = compute_type if device == "cuda" else "int8"
     
     # 2. Transcribe with faster-whisper
@@ -26,11 +30,15 @@ def transcribe_and_diarize(audio_path, model_size, num_speakers, beam_size, comp
         transcript_segments.append({
             "start": segment.start,
             "end": segment.end,
-            "text": segment.text.strip()
+            "text": segment.text.strip(),
+            "speaker": "Speaker 1"
         })
     
     if not transcript_segments:
         return []
+
+    if not enable_diarization:
+        return transcript_segments
 
     # 3. Load audio for diarization
     print("Loading audio for diarization...")
