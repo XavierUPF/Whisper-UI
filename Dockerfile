@@ -8,10 +8,11 @@ ENV PYTHONUNBUFFERED=1
 
 # Install system dependencies required for audio processing (ffmpeg)
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    pkg-config \
     ffmpeg \
     git \
     libsndfile1 \
-    pkg-config \
     libavformat-dev \
     libavcodec-dev \
     libavdevice-dev \
